@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-nginx -p 3000 ./
+web: vendor/bin/heroku-php-nginx ./
