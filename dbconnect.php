@@ -1,9 +1,10 @@
 <?php
+	$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
-	$hostname = 'us-cdbr-iron-east-03.cleardb.net';
-	$user = 'b3c1054bc0b5c8';
-	$pass = 'd7a39280';
-	$dbase = 'heroku_93a35212af060ff';
+	$hostname = $url["host"];
+	$user = $url["user"];
+	$pass = $url["pass"];
+	$dbase = substr($url["path"], 1);
 
 	$db = mysql_connect($hostname,$user,$pass);
 
