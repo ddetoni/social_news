@@ -1,11 +1,15 @@
 {
-    "name": "ddetoni/social_news",
-    "description": "An application to create and share news articles.",
-    "require": {
-        "php": "5.5.35",
-        "ext-mysql": "*"
-    },
-    "require-dev": {
-        "heroku/heroku-buildpack-php": "^101.0"
-    }
+  "name": "ddetoni/social_news",
+  "description": "An application to create and share news articles.",
+  "scripts": {
+    "test": "nightwatch",
+    "setup-test": "bash scripts/install_nightwatch.sh"
+  },
+  "require": {
+    "php": "5.5.35",
+    "ext-mysql": "*"
+  },
+  "require-dev": {
+    "heroku/heroku-buildpack-php": "^101.0"
+  }
 }

@@ -1,2 +1,5 @@
-/vendor/
+vendor/
+bin/
+reports/
+selenium-debug.log
 .env
