@@ -2,7 +2,7 @@
     "name": "ddetoni/social_news",
     "description": "An application to create and share news articles.",
     "require": {
-        "php": "^5.5"
+        "php": "5.5.35"
     },
     "require-dev": {
         "heroku/heroku-buildpack-php": "^101.0"
