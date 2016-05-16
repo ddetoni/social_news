@@ -6,4 +6,10 @@ module.exports = function(browser) {
     return this;
   };
 
+  this.assertThatContentIs = function(content) {
+    browser.expect.element("#new p").text.to.equal(content);
+
+    return this;
+  };
+
 };
