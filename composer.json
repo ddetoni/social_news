@@ -2,6 +2,7 @@
   "name": "ddetoni/social_news",
   "description": "An application to create and share news articles.",
   "scripts": {
+    "start": "heroku local",
     "test": "nightwatch",
     "setup-test": "bash scripts/install_nightwatch.sh"
   },
