@@ -12,4 +12,10 @@ module.exports = function(browser) {
     return this;
   };
 
+  this.assertThatFirstCommentIs = function(comment) {
+    browser.expect.element("#comments_list div").text.to.contain(comment);
+
+    return this;
+  }
+
 };
