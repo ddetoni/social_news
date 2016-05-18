@@ -16,5 +16,18 @@ module.exports = function(browser) {
     return this;
   };
 
+  this.doLogin = function(username, password) {
+    browser
+      .waitForElementPresent("#login input[name=username]", 1000)
+      .setValue("#login input[name=username]", username)
+      .waitForElementPresent("#login input[name=password]", 1000)
+      .setValue("#login input[name=password]", password)
+      .click("#login button");
+
+    browser.expect.element("#login").text.to.contains("User: " + username);
+
+    return this;
+  };
+
 };
 

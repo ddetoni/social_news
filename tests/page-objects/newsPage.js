@@ -1,5 +1,13 @@
 module.exports = function(browser) {
 
+  this.goToRegister = function() {
+    browser
+      .click("#register_content > h5")
+      .pause(500);
+
+    return this;
+  };
+
   this.assertThatTitleIs = function(title) {
     browser.expect.element("#new h3").text.to.equal(title);
 
