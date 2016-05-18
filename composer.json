@@ -3,7 +3,12 @@
   "description": "An application to create and share news articles.",
   "scripts": {
     "start": "heroku local",
-    "test": "nightwatch",
+    "test": [
+      "nightwatch"
+    ],
+    "create_db": "bash scripts/create_db.sh",
+    "cleanup_db": "bash scripts/cleanup_db.sh",
+    "initial_data": "bash scripts/initial_data.sh",
     "setup-test": "bash scripts/install_nightwatch.sh"
   },
   "require": {

@@ -1,0 +1,5 @@
+START TRANSACTION;
+
+DELETE FROM social_news.users;
+
+COMMIT;
