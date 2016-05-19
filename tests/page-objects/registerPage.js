@@ -10,8 +10,7 @@ module.exports = function(browser) {
 
   this.closeAlertMessage = function() {
     browser
-      .setAlertText(browser.Keys.ENTER)
-      .pause(100);
+      .setAlertText(browser.Keys.ENTER);
 
     return this;
   };
@@ -28,7 +27,7 @@ module.exports = function(browser) {
 
   this.fillName = function(name) {
     browser
-      .waitForElementPresent("input[name=name]", 1000)
+      .waitForElementPresent("input[name=name]", 2000)
       .setValue("input[name=name]", name)
       .pause(500);
 

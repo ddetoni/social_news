@@ -1,8 +1,8 @@
 module.exports = function(browser) {
 
-  this.goToRegister = function() {
+  this.goToLastNews = function() {
     browser
-      .click("#register_content > h5")
+      .click("#last_news")
       .pause(500);
 
     return this;

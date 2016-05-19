@@ -9,6 +9,7 @@ module.exports = {
     var homePage = browser.page.homePage();
     var newsPage = browser.page.newsPage();
     var registerPage = browser.page.registerPage();
+    var lastNewsPage = browser.page.lastNewsPage();
 
     homePage
       .goTo()
@@ -18,6 +19,10 @@ module.exports = {
       .assertThatTitleIs(newsTitle)
       .assertThatContentIs(newsContent)
       .assertThatFirstCommentIs(newsFirstComment)
+      .goToLastNews();
+
+    lastNewsPage
+      .assertThatTotalLastNewsIs(1)
       .goToRegister();
 
     registerPage
