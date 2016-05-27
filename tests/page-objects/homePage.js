@@ -8,6 +8,14 @@ module.exports = function(browser) {
     return this;
   };
 
+  this.goToPanel = function() {
+    browser
+      .click('#panel')
+      .pause(500);
+
+    return this;
+  };
+
   this.goToNewsOne = function() {
     browser
       .click('#new1 a')

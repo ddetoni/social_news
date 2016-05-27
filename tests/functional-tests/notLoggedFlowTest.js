@@ -22,7 +22,7 @@ module.exports = {
       .goToLastNews();
 
     lastNewsPage
-      .assertThatTotalLastNewsIs(1)
+      .assertThatTotalLastNewsIs(4)
       .goToRegister();
 
     registerPage
