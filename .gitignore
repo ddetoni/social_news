@@ -3,3 +3,5 @@ bin/
 reports/
 selenium-debug.log
 .env
+composer.lock
+composer.phar

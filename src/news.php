@@ -14,7 +14,7 @@
 	$user = mysql_fetch_array($info_user);
 	$posted_by = $user[name]." ".$user[lastName];
 
-	$query = "SELECT * FROM Comments WHERE idNews='$idNew'";
+	$query = "SELECT * FROM Comments WHERE News_idNews='$idNew'";
 	$data = mysql_query($query);
 
 	$comments = mysql_fetch_array($data);
