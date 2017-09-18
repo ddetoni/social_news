@@ -18,7 +18,8 @@
   },
   "require": {
     "php": "^5.5.35",
-    "ext-mysql": "*"
+    "ext-mysql": "*",
+    "resty/resty": "@stable"
   },
   "require-dev": {
     "heroku/heroku-buildpack-php": "^101.0"

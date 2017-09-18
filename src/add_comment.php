@@ -1,14 +1,18 @@
 <?php
-	include 'dbconnect.php';
+	require "../vendor/autoload.php";
 	session_start();
+
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
+
+	$querydata['comment'] = $_POST[comment];
+	$querydata['Users_idUsers'] = $_SESSION[idUser];
+	$querydata['News_idNews'] = $_SESSION[idNew];
 	
-	$idUser = $_SESSION[idUser];
-	$idNew = $_SESSION[idNew];
-	$comment = $_POST[comment];
+	$resp = $resty->post("comments", $querydata);
 	
-	$sqlinsert = "INSERT INTO `Comments` (`comment`, `News_idNews`, `Users_idUsers`) VALUES ('$comment', '$idNew', '$idUser')";
-	$res = mysql_query($sqlinsert) or die (mysql_error());
-	
-	if($res) echo 1;
+	if($resp) echo 1;
 	else echo 0;
 ?>
