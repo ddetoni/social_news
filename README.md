@@ -4,8 +4,8 @@ There was a college project back in 2012 and now it's time for an huge refactori
 
 ### Tasks
 
-- [ ] Functional test coverage.
-- [ ] Create a new API.
+- [X] Functional test coverage.
+- [X] Create a new API.
 - [ ] Remove database queries from code and replace for API calls.
 - [ ] Replace code with new React components.
 
