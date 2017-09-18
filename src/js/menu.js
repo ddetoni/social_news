@@ -11,7 +11,7 @@ $(document).ready(function () {
 
   $("#register_content").click(function (e) {
     e.preventDefault();
-    $("#content").load('register_content.php');
+    $("#content").load('register_content.html');
   });
 
   $("#panel").click(function (e) {

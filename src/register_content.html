@@ -1,9 +1,7 @@
 Register:
 <br><br>
-	<form name="formRegister" action="register.php" method="post" onSubmit="return registerValidation()">
-		Name: <input type="text" name="name"><br>
-		Last Name: <input type="text" name="lastName"><br>
-		Birthday: <select name="days">
+<form name="formRegister" action="register.php" method="post" onSubmit="return registerValidation()">
+	Name: <input type="text" name="name"><br> Last Name: <input type="text" name="lastName"><br> Birthday: <select name="days">
 					<option value="01" selected="selected">1</option>
 					<option value="02">2</option>
 					<option value="03">3</option>
@@ -36,7 +34,7 @@ Register:
 					<option value="30">30</option>
 					<option value="31">31</option>
 				</select>
-				<select name="months">
+	<select name="months">
 					<option value="01" selected="selected">Janeiro</option>
 					<option value="02">Fevereiro</option>
 					<option value="03">Março</option>
@@ -50,7 +48,7 @@ Register:
 					<option value="11">Novembro</option>
 					<option value="12">Dezembro</option>
 				</select>
-				<select name="years">
+	<select name="years">
 					<option value="1980" selected="selected">1980</option>
 					<option value="1981">1981</option>
 					<option value="1982">1982</option>
@@ -64,10 +62,8 @@ Register:
 					<option value="1990">1990</option>
 					<option value="1991">1991</option>
 					<option value="1992">1992</option>
-				</select><br>
-		Email: <input type="text" name="email"><br><br>
-		Username: <input type="text" name="username"><br>
-		Password: <input type="password" name="password"><br><br>
-		
-		<button type="submit" name="send_register">Send Register</button>
-	</form>
+				</select><br> Email: <input type="text" name="email"><br><br> Username: <input type="text" name="username"><br> Password:
+	<input type="password" name="password"><br><br>
+
+	<button type="submit" name="send_register">Send Register</button>
+</form>

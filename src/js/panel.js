@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $("#add_news").click(function (e) {
     e.preventDefault();
-    $("#panel_view").load('add_news_content.php');
+    $("#panel_view").load('add_news_content.html');
   });
 
   $("#my_favorites").click(function (e) {
