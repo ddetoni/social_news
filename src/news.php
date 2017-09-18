@@ -60,7 +60,7 @@
 				return false;
 			}
 
-	        $.post("add_comment.php", {comment: commentPost}, 'html');
+	        $.post("./comments/add_comment.php", {comment: commentPost}, 'html');
 			alert("Comment send.");
 
 	    });
@@ -90,7 +90,7 @@
 					return false;
 				}
 
-		        $.post("edit_comment.php", {comment: commentPost, idComment: idComment}, 'html');
+		        $.post("./comments/edit_comment.php", {comment: commentPost, idComment: idComment}, 'html');
 				alert("Comment edited.");
 		        $("#box_edit").hide();
 		        $("#comments_list").load(location.href + " #comments_list > *");
@@ -187,7 +187,7 @@
 						{
 							echo "<a id='edit_comment' href='#' onclick='editComment($row[idComments]);'>Edit</a><br>";
 							echo "<div id='box_edit'></div>";
-							echo "<a id='remove_comment' href='remove_comment.php?idComment=$row[idComments]&idNew=$_SESSION[idNew]'>Remove</a><br><br>";
+							echo "<a id='remove_comment' href='./comments/remove_comment.php?idComment=$row[idComments]&idNew=$_SESSION[idNew]'>Remove</a><br><br>";
 						}
 						echo "$row[comment]<br><br>
 					  </div> ";
