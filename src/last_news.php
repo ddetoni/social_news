@@ -1,17 +1,16 @@
 <?php
+	require "../vendor/autoload.php";
+
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
 	
-	include 'dbconnect.php';
+	$response = $resty->get("news", "filter[order]=date%20DESC&filter[limit]=10");
 	
-	$query = "SELECT title, date, url FROM News ORDER BY date DESC LIMIT 10";
-	$data = mysql_query($query);
-	
-	while($row = mysql_fetch_array($data))
-	{
-		
+	foreach($response['body'] as $new) {
 		echo "<div id='lastNews'> 
-				<a id='new1_link' href='$row[url]'><h4>$row[title]</h4></a> ($row[date])<br>
+				<a id='new1_link' href='$new->url'><h4>$new->title</h4></a> ($new->date)<br>
 			</div> ";
-		
 	}
-	
 ?>
