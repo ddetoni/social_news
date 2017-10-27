@@ -1,28 +1,29 @@
 <?php
-	ob_start();
+	require "../vendor/autoload.php";
+	
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
 
 	$username = $_POST['username'];
 	$password = sha1($_POST['password']);
+	
+	$response = $resty->get("users", "filter[where][username]=$username");
 
-	include 'dbconnect.php';
+	$user = $response['body'][0];
 
-	$sql = "SELECT * FROM Users WHERE username='".$username."'";
-	$query = mysql_query($sql);
-	$sql = mysql_fetch_array($query);
-
-	if ($sql[password] == $password)
+	if ($user->password == $password)
 	{
-
 		$validation = "1";
-
-		$username = $_POST['username'];
+		$username = $user->username;
 
 		session_start();
 
-		$_SESSION[username] = $username;
+		$_SESSION[username] = $user->username;
 		$_SESSION[validation] = $validation;
-		$_SESSION[permitionLevel] = $sql[permitionLevel];
-		$_SESSION[idUser] = $sql[idUsers];
+		$_SESSION[permitionLevel] = $user->permitionLevel;
+		$_SESSION[idUser] = $user->idUsers;
 
 		header ("Location: index.php");
 	}
