@@ -1,12 +1,16 @@
 <?php
-	include 'dbconnect.php';
+	require "../vendor/autoload.php";
+	session_start();
+
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
+
+	$querydata['urlServer'] = $_POST[serverUrl];
+	$querydata['nameServer'] = $_POST[serverName];
 	
-	$nameServer = $_POST[serverName];
-	$urlServer = $_POST[serverUrl];
-	
-	$sqlinsert = "INSERT INTO `Servers` (`urlServer`, `nameServer`) VALUES ('$urlServer', '$nameServer')";
-	$res = mysql_query($sqlinsert) or die(mysql_error());
+	$resty->post("servers", $querydata);
 	
 	header('Location: index.php');
-	
 ?>
