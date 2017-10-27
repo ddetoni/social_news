@@ -1,17 +1,19 @@
 <?php
-	include 'dbconnect.php';
+	require "../vendor/autoload.php";
 	session_start();
+
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
 	
-	$query = "SELECT urlNew, titleNew FROM Favorites WHERE Users_idUsers=$_SESSION[idUser] ORDER BY idFavorites DESC";
-	$data = mysql_query($query) or die(mysql_error());
-	
-	while($row = mysql_fetch_array($data))
-	{
-		
+	$idUser = $_SESSION[idUser];
+	$response = $resty->get("favorites", "filter[where][Users_idUsers]=$idUser&filter[order]=idFavorites%20DESC");
+
+	foreach ($response['body'] as $favorite) {
 		echo "<div id='list_favorites'> 
-				<a id='favorite' href='$row[urlNew]'><h4>$row[titleNew]</h4></a><br>
+				<a id='favorite' href='$favorite->urlNew'><h4>$favorite->titleNew</h4></a><br>
 			</div> ";
-		
 	}
 
  ?>
