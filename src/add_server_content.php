@@ -7,19 +7,18 @@
 <h3>Server List:</h3>
 
 <?php
-	include 'dbconnect.php';
-	session_start();
-	
-	$query = "SELECT * FROM Servers ORDER BY idServers DESC";
-	$data = mysql_query($query) or die(mysql_error());
-	
-	while($row = mysql_fetch_array($data))
-	{
-		
-		echo "<div id='list_servers'> 
-				<a id='server' href='$row[urlServer]'><h4>$row[nameServer]</h4></a>
-			</div> ";
-		
-	}
+	require "../vendor/autoload.php";
 
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
+
+	$response = $resty->get("servers", "filter[order]=idServers%20DESC");
+	
+	foreach($response['body'] as $server) {
+		echo "<div id='list_servers'> 
+				<a id='server' href='$server->urlServer'><h4>$server->nameServer</h4></a>
+			</div> ";
+	}
  ?>
