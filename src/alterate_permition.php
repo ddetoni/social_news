@@ -1,3 +1,24 @@
+<?php
+	require "../vendor/autoload.php";
+	use Resty\Resty;
+
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
+	$resty->supportsPatch(TRUE);
+
+	if($_POST[name]!="") {
+		$name = $_POST[name];
+		$lastName = $_POST[lastName];
+		$response = $resty->get("users", "filter[where][name]=$name&filter[where][lastName]=$lastName");
+
+		$idUsers = $response['body'][0]->idUsers;
+		$querydata[permitionLevel] = $_POST[permition];
+		$resty->patch("users/$idUsers", $querydata);
+		
+		header('Location: index.php');
+		exit();
+	}
+?>
 
 <form name="alterate_permition" action="alterate_permition.php" method="post">
 	Name: <input type="text" name="name"><br>
@@ -10,19 +31,3 @@
 	</select>
 	<button type="submit" name="send_permition">Alterate</button>
 </form>
-<?php
-	
-	if($_POST[name]!="") {
-		include 'dbconnect.php';
-		
-		$name = $_POST[name];
-		$lastName = $_POST[lastName];
-		$permition = $_POST[permition];
-		
-		$query = "UPDATE Users SET permitionLevel='$permition' WHERE name='$name' AND lastName='$lastName'";
-		$res = mysql_query($query) or die(mysql_error());
-		
-		header('Location: index.php');
-		
-	}
-?>
