@@ -1,10 +1,9 @@
 <?php
-	include 'dbconnect.php';
+	require "../vendor/autoload.php";
 	
-	$query = "DELETE FROM Comments WHERE News_idNews = '$_GET[idNew]'";
-	$res = mysql_query($query) or die(mysql_error());
+	use Resty\Resty;
 	
-	$query = "DELETE FROM News WHERE idNews = '$_GET[idNew]'";
-	$res = mysql_query($query) or die(mysql_error());
-
+	$resty = new Resty();
+	$resty->setBaseURL(getenv('API_BASE_URL'));
+	$resp = $resty->delete("news/$_GET[idNew]");
 ?>
