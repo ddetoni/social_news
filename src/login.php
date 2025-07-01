@@ -20,10 +20,10 @@
 
 		session_start();
 
-		$_SESSION[username] = $user->username;
-		$_SESSION[validation] = $validation;
-		$_SESSION[permitionLevel] = $user->permitionLevel;
-		$_SESSION[idUser] = $user->idUsers;
+		$_SESSION['username'] = $user->username;
+		$_SESSION['validation'] = $validation;
+		$_SESSION['permitionLevel'] = $user->permitionLevel;
+		$_SESSION['idUser'] = $user->idUsers;
 
 		header ("Location: index.php");
 	}
