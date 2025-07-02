@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "name": "social_news",
+  "stage": "Planning",
+  "priority": "High",
+  "description": "A social platform project built with PHP",
+  "business": {
+    "model": "Social Platform",
+    "target_market": "General users",
+    "funding_status": "Self-funded"
+  },
+  "metrics": {
+    "current_revenue": 0,
+    "current_users": 0,
+    "burn_rate": 0,
+    "runway_months": 0
+  },
+  "goals": [
+    {
+      "description": "Complete MVP development",
+      "target_date": "2025-09-30",
+      "progress": 0.3,
+      "status": "in_progress"
+    }
+  ],
+  "risks": [],
+  "integrations": {},
+  "tags": [
+    "php",
+    "planning",
+    "social platform"
+  ],
+  "last_business_review": "2025-07-02T23:27:24",
+  "notes": {
+    "2025-07-02": "Auto-generated metadata based on project analysis"
+  }
+}
