@@ -1,25 +1,27 @@
 <?php
 	include 'dbconnect.php';
-
-	$idNew = $_GET[idNew];
 	session_start();
-	$_SESSION[idNew] = $idNew;
 
-	$query = "SELECT * FROM News WHERE idNews='$idNew'";
-	$data = mysql_query($query);
+	$idNew = isset($_GET['idNew']) ? (int)$_GET['idNew'] : 0;
+	$_SESSION['idNew'] = $idNew;
 
-	$new = mysql_fetch_array($data);
+	$new = null;
+	$posted_by = '';
+	if ($idNew > 0) {
+		$query = "SELECT * FROM news WHERE idNews='$idNew'";
+		$data = mysql_query($query);
+		if ($data) {
+			$new = mysql_fetch_array($data);
+		}
 
-	$info_user = mysql_query("SELECT name, lastName FROM Users WHERE idUsers=$new[Users_idUsers]");
-	$user = mysql_fetch_array($info_user);
-	$posted_by = $user[name]." ".$user[lastName];
-
-	$query = "SELECT * FROM Comments WHERE News_idNews='$idNew'";
-	$data = mysql_query($query);
-
-	$comments = mysql_fetch_array($data);
-
-
+		if ($new && isset($new['Users_idUsers'])) {
+			$info_user = mysql_query("SELECT name, lastName FROM users WHERE idUsers=" . (int)$new['Users_idUsers']);
+			if ($info_user) {
+				$user = mysql_fetch_array($info_user);
+				$posted_by = ($user['name'] ?? '') . " " . ($user['lastName'] ?? '');
+			}
+		}
+	}
 ?>
 
 <html>
@@ -29,6 +31,8 @@
 	<link rel="stylesheet" href="styles/style1.css" type="text/css">
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
+	<script type="text/javascript" src="./js/addNewsValidation.js"></script>
+	<script type="text/javascript" src="./js/myNews.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
 
@@ -61,7 +65,7 @@
 			}
 
 	        $.post("./comments/add_comment.php", {comment: commentPost}, 'html');
-			alert("Comment send.");
+			alert("Comment sent.");
 
 	    });
 
@@ -110,8 +114,7 @@
 	<div id=login>
 
 		<?php
-		session_start();
-		if($_SESSION[validation] != "1")
+		if (!isset($_SESSION['validation']) || $_SESSION['validation'] !== "1")
 		{
 			echo '<form action="login.php" method="post">
 						Login:
@@ -123,8 +126,8 @@
 				 </form>';
 		} else
 		{
-			echo 'User: '.$_SESSION[username].'<br>';
-			echo 'Permition: '.$_SESSION[permitionLevel].'<br><br>';
+			echo 'User: '.$_SESSION['username'].'<br>';
+			echo 'Permission: '.$_SESSION['permitionLevel'].'<br><br>';
 			echo '<a id="panel" href="#">Panel</a><br>';
 			echo '<a href="logout.php">Logout</a>';
 		}
@@ -140,29 +143,26 @@
 	</div>
 
 	<div id=content>
-
-		<?php echo "<div id='new'><h3>".$new[title]."</h3>";
-			echo "<h6>".$new[date]." - ".$posted_by."</h6>";
-			session_start();
-			if($_SESSION[validation] == "1")
-			{
-			echo "<a id='favorite_link' href='#'>Favorite</a><br><br>";
-			}else{
-				echo "<br>";
+		<?php
+			if (!$new) {
+				echo "News not found.";
+			} else {
+				echo "<div id='new'><h3>".$new['title']."</h3>";
+				echo "<h6>".$new['date']." - ".$posted_by."</h6>";
+				if (isset($_SESSION['validation']) && $_SESSION['validation'] === "1") {
+					echo "<a id='favorite_link' href='#'>Favorite</a><br><br>";
+				} else {
+					echo "<br>";
+				}
+				echo "<p>".$new['text']."</p><br></div>";
 			}
-			?>
-
-
-		<?php echo "<p>$new[text]</p><br>
-
-		</div>";?>
+		?>
 				<hr color=black size=5>
-		<h3>Comentários:</h3>
+		<h3>Comments:</h3>
 
 		<div id='comments_list'>
 			<?php
-			session_start();
-			if($_SESSION[validation] == "1")
+			if (isset($_SESSION['validation']) && $_SESSION['validation'] === "1")
 			{
 				echo "<form id='formComment' action='#' method='post'>
 				<br> <textarea id='text_comment' rows='5' cols='60'></textarea>
@@ -171,25 +171,24 @@
 				";
 			}
 
-			include 'dbconnect.php';
-
-			$query = "SELECT idComments, comment, Users_idUsers FROM Comments WHERE News_idNews=$_SESSION[idNew] ORDER BY idComments DESC";
+			$idNew = isset($_SESSION['idNew']) ? (int)$_SESSION['idNew'] : 0;
+			$query = "SELECT idComments, comment, Users_idUsers FROM comments WHERE News_idNews=$idNew ORDER BY idComments DESC";
 			$data = mysql_query($query);
 
-			while($row = mysql_fetch_array($data))
+			while($data && ($row = mysql_fetch_array($data)))
 			{
-				$info_user = mysql_query("SELECT name, lastName FROM Users WHERE idUsers=$row[Users_idUsers]");
+				$info_user = mysql_query("SELECT name, lastName FROM users WHERE idUsers=".(int)$row['Users_idUsers']);
 				$user = mysql_fetch_array($info_user);
-				$posted_by = $user[name]." ".$user[lastName];
+				$posted_by = ($user['name'] ?? '')." ".($user['lastName'] ?? '');
 				echo "<div id='comment'>
 						<h4>$posted_by :</h4>";
-						if($_SESSION[idUser]==$row[Users_idUsers] || $_SESSION[idUser]==3)
+						if(isset($_SESSION['idUser']) && ($_SESSION['idUser']==$row['Users_idUsers'] || $_SESSION['idUser']==3))
 						{
-							echo "<a id='edit_comment' href='#' onclick='editComment($row[idComments]);'>Edit</a><br>";
+							echo "<a id='edit_comment' href='#' onclick='editComment(".$row['idComments'].");'>Edit</a><br>";
 							echo "<div id='box_edit'></div>";
-							echo "<a id='remove_comment' href='./comments/remove_comment.php?idComment=$row[idComments]&idNew=$_SESSION[idNew]'>Remove</a><br><br>";
+							echo "<a id='remove_comment' href='./comments/remove_comment.php?idComment=".$row['idComments']."&idNew=$idNew'>Remove</a><br><br>";
 						}
-						echo "$row[comment]<br><br>
+						echo $row['comment']."<br><br>
 					  </div> ";
 
 			}

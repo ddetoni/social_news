@@ -2,22 +2,32 @@
 	session_start();
 	include 'dbconnect.php';
 	
-	$url = $_POST[url];
-	$idUser = $_SESSION[idUser];
+	$url = isset($_POST['url']) ? $_POST['url'] : '';
+	$idUser = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
+	$idNew = isset($_SESSION['idNew']) ? (int)$_SESSION['idNew'] : 0;
+
+	if ($idUser === 0 || $idNew === 0 || $url === '') {
+		echo 0;
+		exit;
+	}
+
+	$data = mysql_query("SELECT title FROM news WHERE idNews=$idNew");
+	$titleNew = $data ? mysql_fetch_array($data) : null;
+	$title = $titleNew ? $titleNew['title'] : '';
+	if ($title === '') {
+		echo 0;
+		exit;
+	}
+
+	$data = mysql_query("SELECT * FROM favorites WHERE titleNew='$title' AND Users_idUsers='$idUser'");
+	$exists = $data ? mysql_fetch_array($data) : null;
 	
-	$data = mysql_query("SELECT title FROM News WHERE idNews=$_SESSION[idNew]");
-	$titleNew = mysql_fetch_array($data);
-	
-	$data = mysql_query("SELECT * FROM Favorites WHERE titleNew='$titleNew[title]' AND Users_idUsers='$idUser'");
-	$exists = mysql_fetch_array($data);
-	
-	if($exists[titleNew]!=$titleNew[title]){
-		
-		$sqlinsert = "INSERT INTO `Favorites` (`urlNew`, `Users_idUsers`, `titleNew`) VALUES ('$url', '$idUser', '$titleNew[title]')";
+	if(!$exists || $exists['titleNew'] != $title){
+		$sqlinsert = "INSERT INTO `favorites` (`urlNew`, `Users_idUsers`, `titleNew`) VALUES ('$url', '$idUser', '$title')";
 		$res = mysql_query($sqlinsert) or die (mysql_error());
-		echo true;
+		echo 1;
 	} else {
-		echo false;
+		echo 0;
 	}
 
 	

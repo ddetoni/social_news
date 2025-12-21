@@ -1,18 +1,22 @@
 <?php
-	require "../../vendor/autoload.php";
+	require "../dbconnect.php";
 	session_start();
 
-	use Resty\Resty;
+	$comment = isset($_POST['comment']) ? $_POST['comment'] : '';
+	$idUser = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
+	$idNew = isset($_SESSION['idNew']) ? (int)$_SESSION['idNew'] : 0;
 
-	$resty = new Resty();
-	$resty->setBaseURL(getenv('API_BASE_URL'));
+	if ($comment === '' || $idUser === 0 || $idNew === 0) {
+		echo 0;
+		exit;
+	}
 
-	$querydata['comment'] = $_POST[comment];
-	$querydata['Users_idUsers'] = $_SESSION[idUser];
-	$querydata['News_idNews'] = $_SESSION[idNew];
-	
-	$resp = $resty->post("comments", $querydata);
-	
-	if($resp) echo 1;
-	else echo 0;
+	$query = "INSERT INTO comments (comment, Users_idUsers, News_idNews) VALUES ('$comment', '$idUser', '$idNew')";
+	$res = mysql_query($query) or die(mysql_error());
+
+	if ($res) {
+		echo 1;
+	} else {
+		echo 0;
+	}
 ?>

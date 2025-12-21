@@ -1,13 +1,20 @@
 <?php
-	require "../../vendor/autoload.php";
+	require "../dbconnect.php";
 
-	use Resty\Resty;
+	$comment = isset($_POST['comment']) ? $_POST['comment'] : '';
+	$idComment = isset($_POST['idComment']) ? (int)$_POST['idComment'] : 0;
 
-	$resty = new Resty();
-	$resty->setBaseURL(getenv('API_BASE_URL'));
-	$resty->supportsPatch(TRUE);
+	if ($comment === '' || $idComment === 0) {
+		echo 0;
+		exit;
+	}
 
-	$querydata['comment'] = $_POST[comment];
+	$query = "UPDATE comments SET comment='$comment' WHERE idComments='$idComment'";
+	$res = mysql_query($query) or die(mysql_error());
 
-	$resty->patch("comments/$_POST[idComment]", $querydata);
+	if ($res) {
+		echo 1;
+	} else {
+		echo 0;
+	}
 ?>

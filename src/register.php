@@ -14,7 +14,7 @@
 	$querydata['email'] = $_POST['email'];
 	$querydata['permitionLevel'] = 1;
 	
-	$resty->post("users", $querydata);
+	$resty->post("users.php", $querydata);
 		
 	header ("Location: index.php");
 ?>

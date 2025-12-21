@@ -53,8 +53,8 @@ RUN chmod +x /usr/local/bin/update_apache_config.sh
 # Update the Apache configuration
 RUN /usr/local/bin/update_apache_config.sh
 
-ENV CLEARDB_DATABASE_URL=mysql://root:tarifa185@localhost:3306/social_news
-ENV API_BASE_URL=http://localhost
+ENV CLEARDB_DATABASE_URL=mysql://sn_user:tarifa185@localhost:3306/social_news
+ENV API_BASE_URL=http://localhost/
 
 # Expose port 80 for the web server
 EXPOSE 80

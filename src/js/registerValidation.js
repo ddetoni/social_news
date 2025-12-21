@@ -8,50 +8,50 @@ function registerValidation() {
   var username = formRegister.username.value;
   var password = formRegister.password.value;
 
-  var erros = "";
+  var errors = "";
 
   if (name == "") {
-    erros = 'Put your Name.';
+    errors = 'Enter your name.';
     formRegister.name.focus();
   }
 
   if (lastName == "") {
-    erros = erros + '\nPut your Last Name';
+    errors = errors + '\nEnter your last name.';
     formRegister.lastName.focus();
   }
 
   if (day == "") {
-    erros = erros + '\nPut your Day';
+    errors = errors + '\nEnter your day.';
     formRegister.days.focus();
   }
 
   if (month == "") {
-    erros = erros + '\nPut your Month';
+    errors = errors + '\nEnter your month.';
     formRegister.months.focus();
   }
 
   if (year == "") {
-    erros = erros + '\nPut your Year';
+    errors = errors + '\nEnter your year.';
     formRegister.years.focus();
   }
 
   if (email == "") {
-    erros = erros + '\nPut your Email';
+    errors = errors + '\nEnter your email.';
     formRegister.email.focus();
   }
 
   if (username == "") {
-    erros = erros + '\nPut your Username';
+    errors = errors + '\nEnter your username.';
     formRegister.username.focus();
   }
 
   if (password == "") {
-    erros = erros + '\nPut your Password';
+    errors = errors + '\nEnter your password.';
     formRegister.password.focus();
   }
 
-  if (erros != "") {
-    alert(erros);
+  if (errors != "") {
+    alert(errors);
     return false;
   }
 

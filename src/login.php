@@ -6,17 +6,18 @@
 	$resty = new Resty();
 	$resty->setBaseURL(getenv('API_BASE_URL'));
 
-	$username = $_POST['username'];
-	$password = sha1($_POST['password']);
+	$username = isset($_POST['username']) ? $_POST['username'] : '';
+	$password = isset($_POST['password']) ? sha1($_POST['password']) : '';
 	
-	$response = $resty->get("users", "filter[where][username]=$username");
+	$response = $resty->get("users.php", "filter[where][username]=$username");
 
-	$user = $response['body'][0];
+	$user = (isset($response['body']) && is_array($response['body']) && isset($response['body'][0]))
+		? $response['body'][0]
+		: null;
 
-	if ($user->password == $password)
+	if ($user && $password !== '' && $user->password == $password)
 	{
 		$validation = "1";
-		$username = $user->username;
 
 		session_start();
 
@@ -26,7 +27,9 @@
 		$_SESSION['idUser'] = $user->idUsers;
 
 		header ("Location: index.php");
+		exit;
 	}
 
 	header ("Location: index.php");
+	exit;
 ?>

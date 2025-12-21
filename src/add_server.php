@@ -1,16 +1,15 @@
 <?php
-	require "../vendor/autoload.php";
+	require "dbconnect.php";
 	session_start();
 
-	use Resty\Resty;
+	$urlServer = isset($_POST['serverUrl']) ? $_POST['serverUrl'] : '';
+	$nameServer = isset($_POST['serverName']) ? $_POST['serverName'] : '';
 
-	$resty = new Resty();
-	$resty->setBaseURL(getenv('API_BASE_URL'));
+	if ($urlServer !== '' && $nameServer !== '') {
+		$query = "INSERT INTO servers (urlServer, nameServer) VALUES ('$urlServer', '$nameServer')";
+		mysql_query($query) or die(mysql_error());
+	}
 
-	$querydata['urlServer'] = $_POST[serverUrl];
-	$querydata['nameServer'] = $_POST[serverName];
-	
-	$resty->post("servers", $querydata);
-	
 	header('Location: index.php');
+	exit;
 ?>

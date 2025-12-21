@@ -3,25 +3,25 @@ function addNewsValidation() {
   var text = addNews.text.value;
   var tags = addNews.tags.value;
 
-  var erros = "";
+  var errors = "";
 
   if (title == "") {
-    erros = 'Put the Title.';
+    errors = 'Enter a title.';
     addNews.title.focus();
   }
 
   if (text == "") {
-    erros = erros + '\nPut the Text';
+    errors = errors + '\nEnter the text.';
     addNews.text.focus();
   }
 
   if (tags == "") {
-    erros = erros + '\nPut any Tags';
+    errors = errors + '\nEnter at least one tag.';
     addNews.tags.focus();
   }
 
-  if (erros != "") {
-    alert(erros);
+  if (errors != "") {
+    alert(errors);
     return false;
   }
 

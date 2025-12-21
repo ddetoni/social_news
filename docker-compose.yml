@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: social_news_dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html/src
+      - ./images:/var/www/html/images
+      - ./.user.ini:/var/www/html/.user.ini

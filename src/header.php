@@ -4,7 +4,7 @@
 
 <div id=login>
     <?php
-        if($_SESSION[validation] != "1")
+        if (!isset($_SESSION['validation']) || $_SESSION['validation'] !== "1")
         {
             echo '<form action="login.php" method="post">
                         Login:
@@ -16,8 +16,8 @@
                     </form>';
         } else
         {
-            echo 'User: '.$_SESSION[username].'<br>';
-            echo 'Permition: '.$_SESSION[permitionLevel].'<br><br>';
+            echo 'User: '.$_SESSION['username'].'<br>';
+            echo 'Permission: '.$_SESSION['permitionLevel'].'<br><br>';
             echo '<a id="panel" href="#">Panel</a><br>';
             echo '<a href="logout.php">Logout</a>';
         }
