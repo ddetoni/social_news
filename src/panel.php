@@ -1,5 +1,8 @@
 <?php
-	session_start();
+	if (!function_exists('db_query')) {
+		require __DIR__ . '/app/bootstrap.php';
+	}
+
 	if (!isset($_SESSION['validation']) || $_SESSION['validation'] !== "1") {
 		header("Location: index.php");
 		exit;

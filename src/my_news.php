@@ -1,20 +1,22 @@
 <?php
-	require "../vendor/autoload.php";
-	session_start();
-	
-	use Resty\Resty;
+	if (!function_exists('db_query')) {
+		require __DIR__ . '/app/bootstrap.php';
+	}
 
-	$resty = new Resty();
-	$resty->setBaseURL(getenv('API_BASE_URL'));
-	
 	$idUser = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
-	$response = $idUser ? $resty->get("news_api.php", "filter[where][Users_idUsers]=$idUser&filter[order]=date%20DESC") : array();
-	$news = (isset($response['body']) && is_array($response['body'])) ? $response['body'] : array();
+	$news = array();
+	if ($idUser > 0) {
+		$stmt = db_query(
+			"SELECT idNews, title, url FROM news WHERE Users_idUsers=? ORDER BY date DESC",
+			array($idUser)
+		);
+		$news = db_fetch_all($stmt);
+	}
 
 	foreach($news as $new) {
-		$idNews = is_object($new) ? ($new->idNews ?? 0) : (isset($new['idNews']) ? $new['idNews'] : 0);
-		$title = is_object($new) ? ($new->title ?? '') : (isset($new['title']) ? $new['title'] : '');
-		$url = is_object($new) ? ($new->url ?? '') : (isset($new['url']) ? $new['url'] : '');
+		$idNews = isset($new['idNews']) ? $new['idNews'] : 0;
+		$title = isset($new['title']) ? $new['title'] : '';
+		$url = isset($new['url']) ? $new['url'] : '';
 		echo "<div id='my_new'> 
 				<a id='new' href='$url'><h4>$title</h4></a>
 				<a id='edit_new' href='#' onclick='editNew($idNews)'>Edit</a> <br>

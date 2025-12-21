@@ -22,7 +22,7 @@
 	}
 ?>
 
-<form name="alterate_permition" action="alterate_permition.php" method="post">
+<form name="alterate_permition" action="index.php?page=alterate_permition" method="post">
 	Name: <input type="text" name="name"><br>
 	Last Name: <input type="text" name="lastName"><br>
 	Permission Level: 

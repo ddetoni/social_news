@@ -1,6 +1,7 @@
 <?php
-	require "dbconnect.php";
-	session_start();
+	if (!function_exists('db_query')) {
+		require __DIR__ . '/app/bootstrap.php';
+	}
 
 	$idUser = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
 	if ($idUser === 0) {

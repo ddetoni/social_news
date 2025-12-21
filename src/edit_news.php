@@ -1,22 +1,21 @@
 <?php
-	require "../vendor/autoload.php";
-	session_start();
+	if (!function_exists('db_query')) {
+		require __DIR__ . '/app/bootstrap.php';
+	}
 
-	use Resty\Resty;
-
-	$resty = new Resty();
-	$resty->setBaseURL(getenv('API_BASE_URL'));
-	
 	$idNew = isset($_GET['idNew']) ? (int)$_GET['idNew'] : 0;
-	$response = $resty->get("news_api.php", "idNews=$idNew");
+	$stmt = db_query(
+		"SELECT title, text, tags FROM news WHERE idNews=?",
+		array($idNew)
+	);
+	$news = db_fetch_one($stmt);
 ?>
 
 <form name="add_news" action="update_new.php?idNew=<?php echo $idNew; ?>" method="post">
 	<?php
-		$news = isset($response['body']) ? $response['body'] : (object)array();
-		$title = is_object($news) ? ($news->title ?? '') : ($news['title'] ?? '');
-		$text = is_object($news) ? ($news->text ?? '') : ($news['text'] ?? '');
-		$tags = is_object($news) ? ($news->tags ?? '') : ($news['tags'] ?? '');
+		$title = $news ? ($news['title'] ?? '') : '';
+		$text = $news ? ($news['text'] ?? '') : '';
+		$tags = $news ? ($news['tags'] ?? '') : '';
 	?>
 	Title: <input type="text" name="title" value="<?php echo $title; ?>"><br>
 	Text:<br> <textarea name="text" rows="20" cols="60"><?php echo $text; ?></textarea><br>

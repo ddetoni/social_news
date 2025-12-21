@@ -1,26 +1,14 @@
 <?php
-	require('../vendor/autoload.php');
-	session_start();
-?>
+require_once __DIR__ . '/app/bootstrap.php';
+require_once __DIR__ . '/app/router.php';
 
-<html>
-	<head>
-		<title> Social News </title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="styles/style1.css" type="text/css">
+$page = isset($_GET['page']) ? $_GET['page'] : 'home';
+$partial = isset($_GET['partial']) ? (int)$_GET['partial'] : 0;
+$view = resolve_view($page);
 
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-		<script type="text/javascript" src="./js/menu.js"></script>
-		<script type="text/javascript" src="./js/registerValidation.js"></script>
-		<script type="text/javascript" src="./js/addNewsValidation.js"></script>
-		<script type="text/javascript" src="./js/myNews.js"></script>
-	</head>
+if ($partial === 1) {
+	include $view;
+	exit;
+}
 
-	<body>
-		<?php
-			include('header.php');
-			include("content.php");
-			include('footer.html');
-		?>
-	</body>
-</html>
+include __DIR__ . '/app/views/layout.php';

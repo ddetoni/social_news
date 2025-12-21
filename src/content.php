@@ -1,37 +1,32 @@
-<div id=content>
-	<?php
-		require "../vendor/autoload.php";
-	
-		use Resty\Resty;
-	
-		$resty = new Resty();
-		$resty->setBaseURL(getenv('API_BASE_URL'));
+<?php
+	if (!function_exists('db_query')) {
+		require __DIR__ . '/app/bootstrap.php';
+	}
 
-		$response = $resty->get("news_api.php", "filter[order]=date%20DESC&filter[limit]=4");
-		$news = isset($response['body']) && is_array($response['body']) ? $response['body'] : [];
+	$stmt = db_query("SELECT title, text, url FROM news ORDER BY date DESC LIMIT 4");
+	$news = db_fetch_all($stmt);
 
-		$size_intro = 400;
+	$size_intro = 400;
 
-		if (count($news) > 0) {
-			for ($i = 0; $i < 4; $i++) {
-				if (!isset($news[$i])) {
-					continue;
-				}
-
-				$item = $news[$i];
-				$title = is_object($item) ? ($item->title ?? '') : ($item['title'] ?? '');
-				$text = is_object($item) ? ($item->text ?? '') : ($item['text'] ?? '');
-				$url = is_object($item) ? ($item->url ?? '') : ($item['url'] ?? '');
-				$slot = $i + 1;
-
-				echo "
-				<div id='new$slot'> 
-					<h3>$title</h3><br>
-					".substr($text, 0, $size_intro)."... <a href='$url'>Read more.</a><br><br>
-				</div> ";
+	if (count($news) > 0) {
+		for ($i = 0; $i < 4; $i++) {
+			if (!isset($news[$i])) {
+				continue;
 			}
-		} else {
-			echo "No news.";
+
+			$item = $news[$i];
+			$title = $item['title'] ?? '';
+			$text = $item['text'] ?? '';
+			$url = $item['url'] ?? '';
+			$slot = $i + 1;
+
+			echo "
+			<div id='new$slot'> 
+				<h3>$title</h3><br>
+				".substr($text, 0, $size_intro)."... <a href='$url'>Read more.</a><br><br>
+			</div> ";
 		}
-	?>
-</div>
+	} else {
+		echo "No news.";
+	}
+?>

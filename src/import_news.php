@@ -5,7 +5,9 @@
 	<h4>Server List:</h4>
 	<select name="serverUrl">
 	<?php
-		include 'dbconnect.php';
+		if (!function_exists('db_query')) {
+			require __DIR__ . '/app/bootstrap.php';
+		}
 		
 		$stmt = db_query("SELECT idServers, urlServer, nameServer FROM servers ORDER BY idServers DESC");
 		$servers = db_fetch_all($stmt);
