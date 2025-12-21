@@ -8,18 +8,16 @@
 	$new = null;
 	$posted_by = '';
 	if ($idNew > 0) {
-		$query = "SELECT * FROM news WHERE idNews='$idNew'";
-		$data = mysql_query($query);
-		if ($data) {
-			$new = mysql_fetch_array($data);
-		}
-
-		if ($new && isset($new['Users_idUsers'])) {
-			$info_user = mysql_query("SELECT name, lastName FROM users WHERE idUsers=" . (int)$new['Users_idUsers']);
-			if ($info_user) {
-				$user = mysql_fetch_array($info_user);
-				$posted_by = ($user['name'] ?? '') . " " . ($user['lastName'] ?? '');
-			}
+		$stmt = db_query(
+			"SELECT n.idNews, n.Users_idUsers, n.title, n.text, n.tags, n.date, n.url, u.name, u.lastName
+			 FROM news n
+			 LEFT JOIN users u ON u.idUsers = n.Users_idUsers
+			 WHERE n.idNews = ?",
+			array($idNew)
+		);
+		$new = db_fetch_one($stmt);
+		if ($new) {
+			$posted_by = trim(($new['name'] ?? '') . " " . ($new['lastName'] ?? ''));
 		}
 	}
 ?>
@@ -172,14 +170,19 @@
 			}
 
 			$idNew = isset($_SESSION['idNew']) ? (int)$_SESSION['idNew'] : 0;
-			$query = "SELECT idComments, comment, Users_idUsers FROM comments WHERE News_idNews=$idNew ORDER BY idComments DESC";
-			$data = mysql_query($query);
+			$stmt = db_query(
+				"SELECT c.idComments, c.comment, c.Users_idUsers, u.name, u.lastName
+				 FROM comments c
+				 LEFT JOIN users u ON u.idUsers = c.Users_idUsers
+				 WHERE c.News_idNews = ?
+				 ORDER BY c.idComments DESC",
+				array($idNew)
+			);
+			$comments = db_fetch_all($stmt);
 
-			while($data && ($row = mysql_fetch_array($data)))
+			foreach ($comments as $row)
 			{
-				$info_user = mysql_query("SELECT name, lastName FROM users WHERE idUsers=".(int)$row['Users_idUsers']);
-				$user = mysql_fetch_array($info_user);
-				$posted_by = ($user['name'] ?? '')." ".($user['lastName'] ?? '');
+				$posted_by = trim(($row['name'] ?? '')." ".($row['lastName'] ?? ''));
 				echo "<div id='comment'>
 						<h4>$posted_by :</h4>";
 						if(isset($_SESSION['idUser']) && ($_SESSION['idUser']==$row['Users_idUsers'] || $_SESSION['idUser']==3))

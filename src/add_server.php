@@ -6,8 +6,10 @@
 	$nameServer = isset($_POST['serverName']) ? $_POST['serverName'] : '';
 
 	if ($urlServer !== '' && $nameServer !== '') {
-		$query = "INSERT INTO servers (urlServer, nameServer) VALUES ('$urlServer', '$nameServer')";
-		mysql_query($query) or die(mysql_error());
+		db_query(
+			"INSERT INTO servers (urlServer, nameServer) VALUES (?, ?)",
+			array($urlServer, $nameServer)
+		);
 	}
 
 	header('Location: index.php');

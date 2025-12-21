@@ -7,14 +7,10 @@
 	<?php
 		include 'dbconnect.php';
 		
-		$query = "SELECT * FROM servers ORDER BY idServers DESC";
-		$data = mysql_query($query) or die(mysql_error());
-		
-		while($row = mysql_fetch_array($data))
-		{
-			
+		$stmt = db_query("SELECT idServers, urlServer, nameServer FROM servers ORDER BY idServers DESC");
+		$servers = db_fetch_all($stmt);
+		foreach ($servers as $row) {
 			echo "<option value='".$row['urlServer']."'>".$row['nameServer']."</option>";
-			
 		}
 
  	?>

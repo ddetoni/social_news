@@ -5,8 +5,10 @@
 	$text = isset($_POST['text']) ? $_POST['text'] : '';
 	$tags = isset($_POST['tags']) ? $_POST['tags'] : '';
 	$idNew = isset($_GET['idNew']) ? (int)$_GET['idNew'] : 0;
-	$query = "UPDATE news SET title='$title', text='$text', tags='$tags' WHERE idNews='$idNew'";
-	$res = mysql_query($query) or die(mysql_error());
+	db_query(
+		"UPDATE news SET title=?, text=?, tags=? WHERE idNews=?",
+		array($title, $text, $tags, $idNew)
+	);
 	
 	header("Location: news.php?idNew=$idNew");
 ?>

@@ -8,13 +8,13 @@
 	$date = date('Y').'-'.date('m').'-'.date('d').' '.date('h').':'.date('m').':'.date('s');
 	$idUser = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
 	
-	$query = "INSERT INTO `news` (`title`, `text`, `tags`, `date`, `Users_idUsers`) VALUES ('$title', '$text', '$tags', '$date','$idUser')";
-	
-	mysql_query($query) or die ("Unable to insert news.");
-	$idNew = mysql_insert_id();
+	$stmt = db_query(
+		"INSERT INTO news (title, text, tags, date, Users_idUsers) VALUES (?, ?, ?, ?, ?)",
+		array($title, $text, $tags, $date, $idUser)
+	);
+	$idNew = db_insert_id();
 	$url = "news.php?idNew=$idNew";
-	$query = "UPDATE `news` SET `url`='$url' WHERE `idNews`='$idNew'";
-	mysql_query($query);
+	db_query("UPDATE news SET url=? WHERE idNews=?", array($url, $idNew));
 	
 	header ("Location: $url");
 		

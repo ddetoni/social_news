@@ -8,10 +8,13 @@
 		exit;
 	}
 
-	$query = "SELECT idFavorites, urlNew, titleNew FROM favorites WHERE Users_idUsers=$idUser ORDER BY idFavorites DESC";
-	$data = mysql_query($query);
+	$stmt = db_query(
+		"SELECT idFavorites, urlNew, titleNew FROM favorites WHERE Users_idUsers=? ORDER BY idFavorites DESC",
+		array($idUser)
+	);
+	$favorites = db_fetch_all($stmt);
 
-	while ($data && ($favorite = mysql_fetch_array($data))) {
+	foreach ($favorites as $favorite) {
 		$url = $favorite['urlNew'] ?? '';
 		$title = $favorite['titleNew'] ?? '';
 		echo "<div id='list_favorites'> 

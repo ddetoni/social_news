@@ -1,43 +1,53 @@
 <?php
 	include 'dbconnect.php';
 	
-	$start_date = $_GET[start_date];
-	$end_date = $_GET[end_date];
-	$tags = explode(" ",$_GET[tags]);
+	$start_date = isset($_GET['startDate']) ? $_GET['startDate'] : '';
+	$end_date = isset($_GET['endDate']) ? $_GET['endDate'] : '';
+	$tags = isset($_GET['tags']) ? explode(" ", $_GET['tags']) : array();
+	$tags = array_values(array_filter($tags, 'strlen'));
 	
 	$sizeArray = count($tags);
 	$count = 0;
 	$stringTag = "";
 	
-	foreach ($tags as $tag)
-	{
-		$stringTag = $stringTag."INSTR(tags, '$tag') !='0'";
+	foreach ($tags as $tag) {
+		if ($tag === '') {
+			continue;
+		}
+		$stringTag .= "INSTR(tags, ?) != '0'";
 		$count++;
-		if($count != $sizeArray)
-		{
-			$stringTag = $stringTag." OR ";
+		if ($count != $sizeArray) {
+			$stringTag .= " OR ";
 		}
 	}
 
-	$query = "SELECT idNews, title, text, url, date, tags, Users_idUsers FROM News WHERE date >= '$start_date' AND date <= '$end_date' AND $stringTag";
+	$whereTag = $stringTag !== "" ? " AND ($stringTag)" : "";
+	$sql = "SELECT n.idNews, n.title, n.text, n.url, n.date, n.tags, n.Users_idUsers, u.name, u.lastName
+		FROM news n
+		LEFT JOIN users u ON u.idUsers = n.Users_idUsers
+		WHERE n.date >= ? AND n.date <= ?$whereTag";
 
-	$data = mysql_query($query) or die (mysql_error());
-	
-	while($new = mysql_fetch_array($data))
-	{
-		$tags = explode(" ", $new[tags]);
-		$info_user = mysql_query("SELECT name, lastName FROM Users WHERE idUsers=$new[Users_idUsers]");
-		$user = mysql_fetch_array($info_user);
-		$posted_by = $user[name]." ".$user[lastName];
-		
+	$params = array($start_date, $end_date);
+	foreach ($tags as $tag) {
+		if ($tag === '') {
+			continue;
+		}
+		$params[] = $tag;
+	}
+
+	$stmt = db_query($sql, $params);
+	$rows = db_fetch_all($stmt);
+	foreach ($rows as $new) {
+		$tags_list = explode(" ", $new['tags']);
+		$posted_by = trim(($new['name'] ?? '') . " " . ($new['lastName'] ?? ''));
 		$news[] = array(
-			"id" => $new[idNews],
-			"title" => $new[title],
-			"date" => $new[date],
-			"text" => $new[text],
+			"id" => $new['idNews'],
+			"title" => $new['title'],
+			"date" => $new['date'],
+			"text" => $new['text'],
 			"posted_by" => $posted_by,
-			"url" => $new[url],
-			"tags" => $tags
+			"url" => $new['url'],
+			"tags" => $tags_list
 		);
 	}
 	

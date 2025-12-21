@@ -12,63 +12,69 @@
 		$socket = "/run/mysqld/mysqld.sock";
 	}
 
-	$db = mysqli_connect($hostname, $user, $pass, $dbase, $port, $socket);
-	if (!$db) {
+	$DB_CONN = mysqli_connect($hostname, $user, $pass, $dbase, $port, $socket);
+	if (!$DB_CONN) {
 		die("Database connection failed.");
 	}
 
-	if (!function_exists('mysql_query')) {
-		function mysql_query($query, $link_identifier = null)
-		{
-			global $db;
-			$link = $link_identifier ?: $db;
-			return mysqli_query($link, $query);
-		}
-	}
+	function db_query($sql, $params = array())
+	{
+		global $DB_CONN;
 
-	if (!function_exists('mysql_fetch_array')) {
-		function mysql_fetch_array($result, $result_type = MYSQLI_BOTH)
-		{
-			return mysqli_fetch_array($result, $result_type);
+		$stmt = mysqli_prepare($DB_CONN, $sql);
+		if (!$stmt) {
+			die("Database query failed.");
 		}
-	}
 
-	if (!function_exists('mysql_insert_id')) {
-		function mysql_insert_id($link_identifier = null)
-		{
-			global $db;
-			$link = $link_identifier ?: $db;
-			return mysqli_insert_id($link);
-		}
-	}
-
-	if (!function_exists('mysql_select_db')) {
-		function mysql_select_db($dbname, $link_identifier = null)
-		{
-			global $db;
-			$link = $link_identifier ?: $db;
-			return mysqli_select_db($link, $dbname);
-		}
-	}
-
-	if (!function_exists('mysql_connect')) {
-		function mysql_connect($server = null, $username = null, $password = null, $new_link = false, $client_flags = 0)
-		{
-			global $db;
-			if ($server === null) {
-				return $db;
+		if (!empty($params)) {
+			$types = '';
+			$values = array();
+			foreach ($params as $param) {
+				if (is_int($param)) {
+					$types .= 'i';
+				} elseif (is_float($param)) {
+					$types .= 'd';
+				} else {
+					$types .= 's';
+				}
+				$values[] = $param;
 			}
-			return mysqli_connect($server, $username, $password);
+
+			mysqli_stmt_bind_param($stmt, $types, ...$values);
 		}
+
+		if (!mysqli_stmt_execute($stmt)) {
+			die("Database query failed.");
+		}
+
+		return $stmt;
 	}
 
-	if (!function_exists('mysql_error')) {
-		function mysql_error($link_identifier = null)
-		{
-			global $db;
-			$link = $link_identifier ?: $db;
-			return mysqli_error($link);
+	function db_fetch_one($stmt)
+	{
+		$result = mysqli_stmt_get_result($stmt);
+		if (!$result) {
+			return null;
 		}
+
+		$row = mysqli_fetch_assoc($result);
+		return $row ? $row : null;
+	}
+
+	function db_fetch_all($stmt)
+	{
+		$result = mysqli_stmt_get_result($stmt);
+		if (!$result) {
+			return array();
+		}
+
+		return mysqli_fetch_all($result, MYSQLI_ASSOC);
+	}
+
+	function db_insert_id()
+	{
+		global $DB_CONN;
+		return mysqli_insert_id($DB_CONN);
 	}
 
 ?>

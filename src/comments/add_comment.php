@@ -11,12 +11,10 @@
 		exit;
 	}
 
-	$query = "INSERT INTO comments (comment, Users_idUsers, News_idNews) VALUES ('$comment', '$idUser', '$idNew')";
-	$res = mysql_query($query) or die(mysql_error());
+	db_query(
+		"INSERT INTO comments (comment, Users_idUsers, News_idNews) VALUES (?, ?, ?)",
+		array($comment, $idUser, $idNew)
+	);
 
-	if ($res) {
-		echo 1;
-	} else {
-		echo 0;
-	}
+	echo 1;
 ?>

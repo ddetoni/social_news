@@ -9,10 +9,9 @@
 <?php
 	require "dbconnect.php";
 
-	$query = "SELECT idServers, urlServer, nameServer FROM servers ORDER BY idServers DESC";
-	$data = mysql_query($query);
-
-	while ($data && ($server = mysql_fetch_array($data))) {
+	$stmt = db_query("SELECT idServers, urlServer, nameServer FROM servers ORDER BY idServers DESC");
+	$servers = db_fetch_all($stmt);
+	foreach ($servers as $server) {
 		$url = $server['urlServer'] ?? '';
 		$name = $server['nameServer'] ?? '';
 		echo "<div id='list_servers'> 

@@ -11,20 +11,25 @@
 		exit;
 	}
 
-	$data = mysql_query("SELECT title FROM news WHERE idNews=$idNew");
-	$titleNew = $data ? mysql_fetch_array($data) : null;
+	$stmt = db_query("SELECT title FROM news WHERE idNews=?", array($idNew));
+	$titleNew = db_fetch_one($stmt);
 	$title = $titleNew ? $titleNew['title'] : '';
 	if ($title === '') {
 		echo 0;
 		exit;
 	}
 
-	$data = mysql_query("SELECT * FROM favorites WHERE titleNew='$title' AND Users_idUsers='$idUser'");
-	$exists = $data ? mysql_fetch_array($data) : null;
+	$stmt = db_query(
+		"SELECT idFavorites, titleNew FROM favorites WHERE titleNew=? AND Users_idUsers=?",
+		array($title, $idUser)
+	);
+	$exists = db_fetch_one($stmt);
 	
 	if(!$exists || $exists['titleNew'] != $title){
-		$sqlinsert = "INSERT INTO `favorites` (`urlNew`, `Users_idUsers`, `titleNew`) VALUES ('$url', '$idUser', '$title')";
-		$res = mysql_query($sqlinsert) or die (mysql_error());
+		db_query(
+			"INSERT INTO favorites (urlNew, Users_idUsers, titleNew) VALUES (?, ?, ?)",
+			array($url, $idUser, $title)
+		);
 		echo 1;
 	} else {
 		echo 0;

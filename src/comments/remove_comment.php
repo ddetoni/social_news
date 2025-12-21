@@ -5,8 +5,7 @@
 	$idNew = isset($_GET['idNew']) ? (int)$_GET['idNew'] : 0;
 
 	if ($idComment > 0) {
-		$query = "DELETE FROM comments WHERE idComments='$idComment'";
-		mysql_query($query) or die(mysql_error());
+		db_query("DELETE FROM comments WHERE idComments=?", array($idComment));
 	}
 
 	header("Location:../news.php?idNew=$idNew");

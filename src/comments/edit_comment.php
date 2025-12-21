@@ -9,12 +9,6 @@
 		exit;
 	}
 
-	$query = "UPDATE comments SET comment='$comment' WHERE idComments='$idComment'";
-	$res = mysql_query($query) or die(mysql_error());
-
-	if ($res) {
-		echo 1;
-	} else {
-		echo 0;
-	}
+	db_query("UPDATE comments SET comment=? WHERE idComments=?", array($comment, $idComment));
+	echo 1;
 ?>
